@@ -1,8 +1,27 @@
+// Create a simple Counter actor.
+import Nat "mo:base/Nat";
 import Text "mo:base/Text";
 
+actor Counter {
+  stable var currentValue : Nat = 0;
 
-actor {
-    public type HeaderField = (Text, Text);
+  // Increment the counter with the increment function.
+  public func increment() : async () {
+    currentValue += 1;
+  };
+
+  // Read the counter value with a get function.
+  public query func get() : async Nat {
+    currentValue
+  };
+
+  // Write an arbitrary value with a set function.
+  public func set(n: Nat) : async () {
+    currentValue := n;
+  };
+
+
+  public type HeaderField = (Text, Text);
     public type HttpRequest = {
         url : Text;
         method : Text;
@@ -46,8 +65,7 @@ actor {
 
     public shared query func http_request(request: HttpRequest) : async HttpResponse {
         {
-            body = Text.encodeUtf8("<html><body><h1>Hello Word, Mr.zhou</h1></body></html>");
-            // body = [];
+            body = Text.encodeUtf8("<html><body><h1>Hello Word; currentValue= " # Nat.toText(currentValue) # "</h1></body></html>");
             headers = [];
             streaming_strategy = null;
             status_code = 200;
